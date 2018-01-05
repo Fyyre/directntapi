@@ -1,0 +1,99 @@
+# DirectNtApi
+
+# DirectNtApi - simple method to make ntapi function call without importing or walking export table.  Work under Windows 7, 8 and 10.
+
+DirectNtApi is project I create in 2011.  I look for method to call ntdll api without importing or typedef.  Primary motivation
+was simply "because it interest me", not to mention hooking ntdll.dll is not creative, no interesting.
+
+DirectNtApi (no phase out) used in projects that hFireFox (EP_X0FF) and I work on together in past.
+
+Solution was simple.  Make some asm code -> DirectNtApi.lib
+For this I use masm (ml/ml64) as come with Visual Studio (only reason)
+
+Store the sys index inside variable - and make call this way.
+
+To fetch index from any Windows version, we use simple method. We load ntdll.dll from disk,
+and parse it this way:
+
+BOOLEAN IsProcess32bit(
+	HANDLE hProcess
+	)
+{
+	ULONG_PTR pbi = 0;
+	NTSTATUS Status;
+
+	Status = NtQueryInformationProcess(hProcess, ProcessWow64Information, &pbi, sizeof(pbi), NULL);
+	if (!NT_SUCCESS(Status)) {
+
+		SetLastError(RtlNtStatusToDosError(Status));
+		return FALSE;
+
+	}
+	return (BOOLEAN)(pbi != 0);
+}
+
+ULONG GetNativeProcIndex(
+	PCHAR hModule,
+	PCHAR ProcedureName
+	)
+{
+	PVOID pfn;
+	int c = 0;
+	BYTE v = 0;
+	
+	pfn = (void*) PELdr::PELoaderGetProcAddress( hModule, ProcedureName );
+	if (pfn) {
+#ifdef _WIN64
+	c = 4;
+#else
+	c = 1;
+#endif
+
+	return *(ULONG *)((BYTE *)pfn + c);
+	}
+	return (ULONG)-1;
+}
+
+DWORD NtApi( PSTR ApiName )
+{
+	ULONG_PTR ImageSize = 0;
+	TCHAR buf[MAX_PATH] = {0};
+
+	BOOLEAN g_IsWow64 = IsProcess32bit( NtCurrentProcess() );
+
+	GetSystemDirectory(buf, MAX_PATH);
+	lstrcat(buf, TEXT("\\ntdll.dll"));
+
+	void* hNtDll = PELdr::PELoaderLoadImage(buf, NULL, FALSE, (PULONG)&ImageSize);
+
+	bool NtDllLoadFail = (hNtDll == NULL);
+
+	if (NtDllLoadFail)
+	{
+		hNtDll = GetModuleHandle( _T("ntdll.dll") );
+		if (!hNtDll)
+			return -1;
+	}
+
+	DWORD sysIdx = GetNativeProcIndex( (PCHAR)hNtDll, ApiName );
+
+	return sysIdx;
+}
+
+PELoader perhaps in one of fox's repos.  No certain if he publish (will ask), until I do so--no include.
+
+Given our prototypes and storage of sys index as dword in the lib .. to resolve the index at runtime, giving us freedom
+to call ntapi as we wish .. should be obvious.
+
+Perhaps reader is asking question.  What is point of this?  At the time, this was obvious.  As it depend on the use for each project.
+Most project I do in past, out of curious nature, for fun, enjoy learning.
+
+You will need add ntdll.lib (SDK/WDK, or make own) and use winnt.h or ntos.h (see Fox's repo). I omit my own massive ntdll.h due it containing many Microsoft
+header elements.
+
+
+My someone find a value in this nine year old code =>
+
+Be well,
+
+-Fyyre

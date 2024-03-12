@@ -11,7 +11,7 @@ My primary motivation was simply "because it interested me" - not to mention hoo
 
 See usage.txt for details.
 
-May someone find a value in this nine year old code =>
+May someone find a value in this nine year old project =>
 
 Be well,
 

@@ -1,13 +1,17 @@
 # DirectNtApi
-# simple method to make ntapi function call without importing or walking export table. Work under Windows 7, 8 and 10.
+A Simple method to make ntapi function calls *without* importing or walking the export table.\
+Works under Windows 7, 8 and 10.
 
-# This method is OLD! Not recommend use!!
+# This method is OLD
+And is therefore **not recommended** to be used! (It serves as a **POC**(**P**roof **O**f **C**oncept))
 
-DirectNtApi is project I create in 2011. I look for method to call ntdll api without importing or typedef. Primary motivation was simply "because it interest me", not to mention hooking ntdll.dll is not creative, no interesting.
+
+DirectNtApi is a project I created in 2011. I was looking for a method to call the ntdll api but without importing or typedef. 
+My primary motivation was simply "because it interested me" - not to mention hooking ntdll.dll is not creative, and not as interesting.
 
 See usage.txt for details.
 
-My someone find a value in this nine year old code =>
+May someone find a value in this nine year old code =>
 
 Be well,
 

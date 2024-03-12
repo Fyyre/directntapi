@@ -1,18 +1,19 @@
-# DirectNtApi
+DirectNtApi
+A Simple method to make ntapi function calls *without* importing or walking the export table.\
+Works under Windows 7, 8 and 10.
 
-# DirectNtApi - simple method to make ntapi function call without importing or walking export table.  Work under Windows 7, 8 and 10.
+DirectNtApi is a project I created in 2011. I was looking for a method to call the ntdll api but without importing or typedef. 
+My primary motivation was simply "because it interested me" - not to mention hooking ntdll.dll is not creative, and not as interesting.
 
-DirectNtApi is project I create in 2011.  I look for method to call ntdll api without importing or typedef.  Primary motivation
-was simply "because it interest me", not to mention hooking ntdll.dll is not creative, no interesting.
 
-DirectNtApi (no phase out) used in projects that hFireFox (EP_X0FF) and I work on together in past.
+DirectNtApi (no phase out) used in projects that hFireFox (EP_X0FF) and I work on together in the past.
 
-Solution was simple.  Make some asm code -> DirectNtApi.lib
-For this I use masm (ml/ml64) as come with Visual Studio (only reason)
+The solution was simple.  Make some asm code -> DirectNtApi.lib
+For this I use masm (ml/ml64) as it comes with Visual Studio (only reason)
 
-Store the sys index inside variable - and make call this way.
+Store the sys index inside variable - and make the call this way.
 
-To fetch index from any Windows version, we use simple method. We load ntdll.dll from disk,
+To fetch index from any Windows version, we use a simple method. We load ntdll.dll from disk,
 and parse it this way:
 
 BOOLEAN IsProcess32bit(
@@ -92,7 +93,7 @@ You will need add ntdll.lib (SDK/WDK, or make own) and use winnt.h or ntos.h (se
 header elements.
 
 
-My someone find a value in this nine year old code =>
+May someone find a value in this nine year old project =>
 
 Be well,
 
